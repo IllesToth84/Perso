@@ -13,28 +13,41 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Racing+Sans+One&display=swap" rel="stylesheet">
-    <link rel="icon" href="img/icons8-search-more-80.png" type="image/x-icon"/>
+    <link rel="icon" href="img/icons8-search-more-80.png" type="image/x-icon" />
 
 
     <style>
+        .stat-dot {
+            height: 10px;
+            width: 10px;
+            float: left;
+            border-radius: 50%;
+            margin-top: 5px;
+            margin-right: 5px;
+        }
 
+        .stat-dot.bg-active {
+            background: green;
+        }
 
-
+        .stat-dot.bg-inactive {
+            background: gray;
+        }
     </style>
 </head>
 
 <body>
-   
-   <div class="header" style="background-image:url(img/perso.jpeg)">
-            <h1>&copy;PERSO</h1>
-            
-        </div>
+
+    <div class="header" style="background-image:url(img/perso.jpeg)">
+        <h1>&copy;PERSO</h1>
+
+    </div>
 
     <div class="main">
-        
+
         <div class="grid-container">
-           
-           
+
+
             <div class="search-field">
                 <input type="text" class="data-search" placeholder="Search...">
             </div>
@@ -42,19 +55,18 @@
         </div>
 
     </div>
-    
-    
-        <div class="footer" style="background-image: url('img/footer.jpg")
->
 
-        </div>
+
+    <div class="footer" style="background-image: url('img/footer.jpg" )>
+
+    </div>
 
 
     <script>
-        $(document).ready(function() {
-            $('.data-search').on('keyup', function() {
+        $(document).ready(function () {
+            $('.data-search').on('keyup', function () {
                 var searchTerm = $(this).val().toLowerCase();
-                $('tr[role="row"]').each(function() {
+                $('tr[role="row"]').each(function () {
                     var lineStr = $(this).text().toLowerCase();
                     if (lineStr.indexOf(searchTerm) === -1) {
                         $(this).hide();
@@ -64,46 +76,47 @@
                 });
             });
         });
-        $(function() {
+        $(function () {
             $("#grid").kendoGrid({
                 columns: [{
-                        title: "Identifier",
-                        field: "ID",
-                    },
+                    title: "Identifier",
+                    field: "ID",
+                    template: "<button class='btn btn-default'></button>"
+                },
 
-                    {
-                        title: "Organization",
-                        field: "Organization"
-                    },
-                          
-                    {
-                        title: "Picture",
-                        template: "<img src='img/man.jpg' />"
+                {
+                    title: "Organization",
+                    field: "Organization"
+                },
 
-                    },
-                    {
-                        title: "Full Name",
-                        field: "DisplayName"
+                {
+                    title: "Picture",
+                    template: "<img src='img/man.jpg' />"
 
-                    },
-                    {
-                        title: "E-mail",
-                        field: "EMail",
-                        template: "<a href='mailto:#= EMail #'>#=EMail#</a>"
-                    },
-                    {
-                        title: "Phone",
-                        field: "Phone"
-                    },
-                    {
-                        title: "User Name",
-                        field: "UserName"
-                    },
-                    {
-                        title: "Status",
-                        field: "Status"
-                        
-                     }
+                },
+                {
+                    title: "Full Name",
+                    field: "DisplayName"
+
+                },
+                {
+                    title: "E-mail",
+                    field: "EMail",
+                    template: "<a href='mailto:#= EMail #'>#=EMail#</a>"
+                },
+                {
+                    title: "Phone",
+                    field: "Phone"
+                },
+                {
+                    title: "User Name",
+                    field: "UserName"
+                },
+                {
+                    title: "Status",
+                    template: "<span class='stat-dot'></span> #=Status#"
+
+                }
                 ],
                 dataSource: {
                     data: Persons
@@ -115,18 +128,23 @@
                     pageSize: 20
                 }
             });
+
+            $('tr[role="row"]').each(function () {
+                const lastCell = $(this).children('td:last-child');
+                const text = lastCell.text();
+                const isActive = text.includes('Open');
+                const statDot = lastCell.children('.stat-dot');
+
+                if (isActive) {
+                    statDot.addClass('bg-active').removeClass('bg-inactive');
+                } else {
+                    statDot.addClass('bg-inactive').removeClass('bg-active');
+                }
+
+
+            });
         });
-        
-        $('td[role="row"]').each(function() {
-	const lastCell = $(this).children('td:last-child');
-  const text = lastCell.text();
-  
-  const color = text == 'Open' ? 'green' : 'red';
-  lastCell.css('color', color);
-})
-        
-        
- 
+
     </script>
 
 </body>
