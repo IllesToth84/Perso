@@ -1,7 +1,48 @@
-﻿html, body {
-    font-family: 'Racing Sans One', cursive;
+﻿ 
+ 
 
+.header {
+    font-family: 'Racing Sans One', cursive;
+    padding: 25px;
+    color: white;
+    background-position: 50% 60%;
+    height: 170px;
 }
 
+.header h1 {
+    font-size: 3.5em;
+    margin-left: 35px;
+    margin-top: 20px;
+}
+
+.search-field {
+    color: black;
+    margin-top: -50px;
+    margin-bottom: 50px;
+}
+
+.data-search {
+    border: 2px solid gray;
+    font-family: monospace;
+    padding: 5px;
+}
+
+#grid {
+    padding: 25px;
+    font-family: monospace;
+}
+
+.grid-container {
+    margin: 120px 200px 150px 200px;
+ }
 
 
+.footer {
+    height: 200px;
+    color: white;
+    font-family: 'Racing Sans One', cursive;
+    background-position: 80% 34%;
+ }
+
+
+ 

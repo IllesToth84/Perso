@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>@PERSO</title>
+    <meta charset="utf-8" />
+    <link href="style/StyleSheet.css" rel="stylesheet" />
+    <script src="scripts/data.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2019.2.619/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2019.2.619/styles/kendo.blueopal.min.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/icons8-search-more-80.png" type="image/x-icon"/>
+
+
+    <style>
+
+
+
+    </style>
+</head>
+
+<body>
+   
+   <div class="header" style="background-image:url(img/perso.jpeg)">
+            <h1>&copy;PERSO</h1>
+            
+        </div>
+
+    <div class="main">
+        
+        <div class="grid-container">
+           
+           
+            <div class="search-field">
+                <input type="text" class="data-search" placeholder="Search...">
+            </div>
+            <div id="grid"></div>
+        </div>
+
+    </div>
+    
+    
+        <div class="footer" style="background-image: url('img/footer.jpg")
+>
+
+        </div>
+
+
+    <script>
+        $(document).ready(function() {
+            $('.data-search').on('keyup', function() {
+                var searchTerm = $(this).val().toLowerCase();
+                $('tr[role="row"]').each(function() {
+                    var lineStr = $(this).text().toLowerCase();
+                    if (lineStr.indexOf(searchTerm) === -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        });
+        $(function() {
+            $("#grid").kendoGrid({
+                columns: [{
+                        title: "Identifier",
+                        field: "ID",
+                        template: "<button class='btn btn-default'></button>"
+                    },
+
+                    {
+                        title: "Organization",
+                        field: "Organization"
+                    },
+                          
+                    {
+                        title: "Picture",
+                        template: "<img src='img/man.jpg' />"
+
+                    },
+                    {
+                        title: "Full Name",
+                        field: "DisplayName"
+
+                    },
+                    {
+                        title: "E-mail",
+                        field: "EMail",
+                        template: "<a href='mailto:#= EMail #'>#=EMail#</a>"
+                    },
+                    {
+                        title: "Phone",
+                        field: "Phone"
+                    },
+                    {
+                        title: "User Name",
+                        field: "UserName"
+                    },
+                    {
+                        title: "Status",
+                        field: "Status"
+                        
+                     }
+                ],
+                dataSource: {
+                    data: Persons
+                },
+                scrollable: false,
+                groupable: true,
+                sortable: true,
+                pageable: {
+                    pageSize: 20
+                }
+            });
+        });
+        
+        $('td[role="row"]').each(function() {
+	const lastCell = $(this).children('td:last-child');
+  const text = lastCell.text();
+  
+  const color = text == 'Open' ? 'green' : 'red';
+  lastCell.css('color', color);
+})
+        
+        
+ 
+    </script>
+
+</body>
+
+</html>
