@@ -87,10 +87,10 @@
                     },
                     {
                         field: 'Status',
-                        template: '<span class="stat-dot"></span> #=Status#',
                         minScreenWidth: 481,
-                        attributes: { // let's make the life easier by adding a class name
-                            class: 'customer-status'
+                        template: function (data) {
+                            const cName = data.Status == 'Open' ? 'bg-active' : 'bg-inactive';
+                            return `<span class="stat-dot ${cName}"></span>${kendo.htmlEncode(data.Status)}`;
                         }
                     },
                     {
@@ -100,7 +100,6 @@
                     }
                 ]
             });
-            setActiveStatus();
 
             // make the grid searchable
             //change event
@@ -146,24 +145,10 @@
                         }
                     ]
                 });
-                setActiveStatus();
             });
 
         });
 
-        // set a dot (green if active, else gray) programatically
-        function setActiveStatus() {
-            $('.customer-status').each(function () {
-                const text = $(this).text();
-                const isActive = text.includes('Open');
-                const statDot = $(this).children('.stat-dot');
-                if (isActive) {
-                    statDot.addClass('bg-active').removeClass('bg-inactive');
-                } else {
-                    statDot.addClass('bg-inactive').removeClass('bg-active');
-                }
-            });
-        }
 
     </script>
 
@@ -171,8 +156,6 @@
     <!-- 
         Following is the template for Mobile screen
         Technically when the screen-size is less than 480px
-
-        See line no. 98 & 99 for reference
      -->
 
     <script id="responsive-column-template" type="text/x-kendo-template">
@@ -189,8 +172,10 @@
         <p class="col-template-val">#=data.Phone#</p>
         
         <strong>Status</strong>
+
+        # const cName = data.Status == 'Open' ? 'bg-active' : 'bg-inactive'; #
         <p class="col-template-val customer-status">
-            <span class="stat-dot"></span> 
+            <span class="stat-dot #=cName#"></span> 
             #=data.Status#
         </p>
     </script>
