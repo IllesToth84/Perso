@@ -10,50 +10,38 @@
     <script src="scripts/kendo.all.min.js"></script>
     <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2019.2.619/styles/kendo.common.min.css" />
     <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2019.2.619/styles/kendo.blueopal.min.css" />
+    <link rel="stylesheet" href="styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Racing+Sans+One&display=swap" rel="stylesheet">
     <link rel="icon" href="img/icons8-search-more-80.png" type="image/x-icon" />
 
 
-    <style>
-        .stat-dot {
-            height: 10px;
-            width: 10px;
-            float: left;
-            border-radius: 50%;
-            margin-top: 5px;
-            margin-right: 5px;
-        }
 
-        .stat-dot.bg-active {
-            background: green;
-        }
 
-        .stat-dot.bg-inactive {
-            background: gray;
-        }
-    </style>
+
 </head>
 
 <body>
+
+
 
     <div class="header" style="background-image:url(img/perso.jpeg)">
         <h1>&copy;PERSO</h1>
 
     </div>
 
-    <div class="main">
 
-        <div class="grid-container">
+    <div class="grid-container">
 
-
-            <div class="search-field">
-                <input type="text" class="data-search" placeholder="Search...">
-            </div>
-            <div id="grid"></div>
+        <div class="search-field">
+            <input type="text" class="data-search" placeholder="Search..." />
         </div>
 
+        <div id="grid">
+
+        </div>
     </div>
 
 
@@ -62,74 +50,110 @@
     </div>
 
 
+
     <script>
-        $(document).ready(function () {
-            $('.data-search').on('keyup', function () {
-                var searchTerm = $(this).val().toLowerCase();
-                $('tr[role="row"]').each(function () {
-                    var lineStr = $(this).text().toLowerCase();
-                    if (lineStr.indexOf(searchTerm) === -1) {
-                        $(this).hide();
-                    } else {
-                        $(this).show();
-                    }
-                });
-            });
-        });
-        $(function () {
+        $(function() {
             $("#grid").kendoGrid({
-                columns: [{
-                    title: "Identifier",
-                    field: "ID",
-                    template: "<button class='btn btn-default'></button>"
-                },
+                    dataSource: {
+                        data: Persons
+                    },
+                    pageable: {
+                        pageSize: 20
+                    },
+                    filterable: true,
+                    scrollable: false,
+                    groupable: true,
+                    sortable: true,
+                    columns: [{
+                            title: "Identifier",
+                            field: "ID",
+                            template: "<span class='bubble'>#=ID#</span>"
+                        },
 
-                {
-                    title: "Organization",
-                    field: "Organization"
-                },
+                        {
+                            title: "Organization",
+                            field: "Organization"
+                        },
+                        {
+                            title: "Full Name",
+                            field: "DisplayName",
+                            template: "<span><img src='img/man.jpg' class='profile-img'/></span> #=DisplayName#",
+                        },
+                        {
+                            title: "E-mail",
+                            field: "EMail",
+                            template: "<a href='mailto:#= EMail #'>#=EMail#</a>"
+                        },
+                        {
+                            title: "Phone",
+                            field: "Phone"
+                        },
+                        {
+                            title: "User Name",
+                            field: "UserName"
 
-                {
-                    title: "Picture",
-                    template: "<img src='img/man.jpg' />"
+                        },
+                        {
+                            title: "Status",
+                            field: "Status",
+                            template: "<span class='stat-dot'></span> #=Status#"
+                        }
+                    ],
+                    toolbar: [{
+                        template: kendo.template($(".search-field").html())
+                    }],
 
-                },
-                {
-                    title: "Full Name",
-                    field: "DisplayName"
 
-                },
-                {
-                    title: "E-mail",
-                    field: "EMail",
-                    template: "<a href='mailto:#= EMail #'>#=EMail#</a>"
-                },
-                {
-                    title: "Phone",
-                    field: "Phone"
-                },
-                {
-                    title: "User Name",
-                    field: "UserName"
-                },
-                {
-                    title: "Status",
-                    template: "<span class='stat-dot'></span> #=Status#"
 
-                }
-                ],
-                dataSource: {
-                    data: Persons
-                },
-                scrollable: false,
-                groupable: true,
-                sortable: true,
-                pageable: {
-                    pageSize: 20
-                }
-            });
+                }).data("kendoGrid"),
+                $("body").on("keyup", ".data-search", function() {
+                    var val = $(".data-search").val();
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [{
+                                field: "ID",
+                                operator: "contains",
+                                value: val
+                            },
+                            {
+                                field: "Organization",
+                                operator: "contains",
+                                value: val
+                            },
+                            {
+                                field: "DisplayName",
+                                operator: "contains",
+                                value: val
+                            },
+                            {
+                                field: "EMail",
+                                operator: "contains",
+                                value: val
+                            },
+                            {
+                                field: "Phone",
+                                operator: "contains",
+                                value: val
+                            },
+                            {
+                                field: "UserName",
+                                operator: "contains",
+                                value: val
+                            },
+                            {
+                                field: "Status",
+                                operator: "contains",
+                                value: val
+                            }
+                        ]
+                    });
+                
+                });
 
-            $('tr[role="row"]').each(function () {
+
+
+
+            $('tr[role="row"]').each(function() {
                 const lastCell = $(this).children('td:last-child');
                 const text = lastCell.text();
                 const isActive = text.includes('Open');
@@ -141,10 +165,12 @@
                     statDot.addClass('bg-inactive').removeClass('bg-active');
                 }
 
+                });
+            
+             });
 
-            });
-        });
-
+            
+       
     </script>
 
 </body>
