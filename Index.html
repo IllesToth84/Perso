@@ -4,23 +4,16 @@
 <head>
     <title>@PERSO</title>
     <meta charset="utf-8" />
-    <link href="style/StyleSheet.css" rel="stylesheet" />
     <script src="scripts/data.js"></script>
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/kendo.all.min.js"></script>
-    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2019.2.619/styles/kendo.common.min.css" />
-    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2019.2.619/styles/kendo.blueopal.min.css" />
+    <link rel="stylesheet" href="styles/kendo.blueopal.min.css" />
     <link rel="stylesheet" href="styles/kendo.common.min.css" />
-    <link rel="stylesheet" href="styles/kendo.default.min.css" />
-    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
+    <link rel="stylesheet" href="styles/kendo.blueopal.mobile.min.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
 
     <link href="https://fonts.googleapis.com/css?family=Racing+Sans+One&display=swap" rel="stylesheet">
     <link rel="icon" href="img/icons8-search-more-80.png" type="image/x-icon" />
-
-
-
-
-
 </head>
 
 <body>
@@ -29,148 +22,177 @@
 
     <div class="header" style="background-image:url(img/perso.jpeg)">
         <h1>&copy;PERSO</h1>
-
     </div>
 
 
     <div class="grid-container">
-
         <div class="search-field">
             <input type="text" class="data-search" placeholder="Search..." />
         </div>
 
-        <div id="grid">
-
-        </div>
+        <div id="grid"></div>
     </div>
 
 
-    <div class="footer" style="background-image: url('img/footer.jpg" )>
-
-    </div>
+    <div class="footer" style="background-image: url('img/footer.jpg')"></div>
 
 
 
     <script>
-        $(function() {
-            $("#grid").kendoGrid({
-                    dataSource: {
-                        data: Persons
-                    },
-                    pageable: {
-                        pageSize: 20
-                    },
-                    filterable: true,
-                    scrollable: false,
-                    groupable: true,
-                    sortable: true,
-                    columns: [{
-                            title: "Identifier",
-                            field: "ID",
-                            template: "<span class='bubble'>#=ID#</span>"
-                        },
+        $(function () {
 
-                        {
-                            title: "Organization",
-                            field: "Organization"
-                        },
-                        {
-                            title: "Full Name",
-                            field: "DisplayName",
-                            template: "<span><img src='img/man.jpg' class='profile-img'/></span> #=DisplayName#",
-                        },
-                        {
-                            title: "E-mail",
-                            field: "EMail",
-                            template: "<a href='mailto:#= EMail #'>#=EMail#</a>"
-                        },
-                        {
-                            title: "Phone",
-                            field: "Phone"
-                        },
-                        {
-                            title: "User Name",
-                            field: "UserName"
-
-                        },
-                        {
-                            title: "Status",
-                            field: "Status",
-                            template: "<span class='stat-dot'></span> #=Status#"
+            // initialize Keno UI Grid
+            $('#grid').kendoGrid({
+                dataSource: {
+                    data: Persons
+                },
+                pageable: {
+                    pageSize: 20
+                },
+                filterable: true,
+                scrollable: false,
+                groupable: true,
+                sortable: true,
+                columns: [
+                    {
+                        field: 'ID',
+                        template: '<span class="bubble">#=ID#</span>',
+                        minScreenWidth: 481
+                    },
+                    {
+                        field: 'Organization',
+                        minScreenWidth: 481
+                    },
+                    {
+                        field: 'DisplayName',
+                        title: 'Full Name',
+                        template: '<img src="img/man.jpg" class="profile-img"/> #=DisplayName#',
+                        minScreenWidth: 481
+                    },
+                    {
+                        field: 'EMail',
+                        title: 'E-mail',
+                        template: '<a href="mailto:#= EMail #">#=EMail#</a>',
+                        minScreenWidth: 1024
+                    },
+                    {
+                        field: 'Phone',
+                        title: 'Phone',
+                        minScreenWidth: 560
+                    },
+                    {
+                        field: 'UserName',
+                        title: 'User Name',
+                        minScreenWidth: 768
+                    },
+                    {
+                        field: 'Status',
+                        template: '<span class="stat-dot"></span> #=Status#',
+                        minScreenWidth: 481,
+                        attributes: { // let's make the life easier by adding a class name
+                            class: 'customer-status'
                         }
-                    ],
-                    toolbar: [{
-                        template: kendo.template($(".search-field").html())
-                    }],
+                    },
+                    {
+                        title: "Customers",
+                        template: kendo.template($("#responsive-column-template").html()),
+                        media: "(max-width: 480px)"
+                    }
+                ]
+            });
+            setActiveStatus();
 
-
-
-                }).data("kendoGrid"),
-                $("body").on("keyup", ".data-search", function() {
-                    var val = $(".data-search").val();
-                    $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [{
-                                field: "ID",
-                                operator: "contains",
-                                value: val
-                            },
-                            {
-                                field: "Organization",
-                                operator: "contains",
-                                value: val
-                            },
-                            {
-                                field: "DisplayName",
-                                operator: "contains",
-                                value: val
-                            },
-                            {
-                                field: "EMail",
-                                operator: "contains",
-                                value: val
-                            },
-                            {
-                                field: "Phone",
-                                operator: "contains",
-                                value: val
-                            },
-                            {
-                                field: "UserName",
-                                operator: "contains",
-                                value: val
-                            },
-                            {
-                                field: "Status",
-                                operator: "contains",
-                                value: val
-                            }
-                        ]
-                    });
-                
+            // make the grid searchable
+            //change event
+            $(".data-search").keyup(function () {
+                var val = $('.data-search').val();
+                $("#grid").data("kendoGrid").dataSource.filter({
+                    logic: "or",
+                    filters: [
+                        {
+                            field: "ID",
+                            operator: "contains",
+                            value: val
+                        },
+                        {
+                            field: "Organization",
+                            operator: "contains",
+                            value: val
+                        },
+                        {
+                            field: "DisplayName",
+                            operator: "contains",
+                            value: val
+                        },
+                        {
+                            field: "Email",
+                            operator: "contains",
+                            value: val
+                        },
+                        {
+                            field: "Phone",
+                            operator: "contains",
+                            value: val
+                        },
+                        {
+                            field: "UserName",
+                            operator: "contains",
+                            value: val
+                        },
+                        {
+                            field: "Status",
+                            operator: "contains",
+                            value: val
+                        }
+                    ]
                 });
+                setActiveStatus();
+            });
 
+        });
 
-
-
-            $('tr[role="row"]').each(function() {
-                const lastCell = $(this).children('td:last-child');
-                const text = lastCell.text();
+        // set a dot (green if active, else gray) programatically
+        function setActiveStatus() {
+            $('.customer-status').each(function () {
+                const text = $(this).text();
                 const isActive = text.includes('Open');
-                const statDot = lastCell.children('.stat-dot');
-
+                const statDot = $(this).children('.stat-dot');
                 if (isActive) {
                     statDot.addClass('bg-active').removeClass('bg-inactive');
                 } else {
                     statDot.addClass('bg-inactive').removeClass('bg-active');
                 }
+            });
+        }
 
-                });
-            
-             });
+    </script>
 
-            
-       
+
+    <!-- 
+        Following is the template for Mobile screen
+        Technically when the screen-size is less than 480px
+
+        See line no. 98 & 99 for reference
+     -->
+
+    <script id="responsive-column-template" type="text/x-kendo-template">
+        <strong>Organization</strong>
+        <p class="col-template-val">#=data.Organization#</p>
+
+        <strong>Full Name</strong>
+        <p class="col-template-val">#=data.DisplayName#</p>
+
+        <strong>Email</strong>
+        <p class="col-template-val">#=data.EMail#</p>
+
+        <strong>Phone Number</strong>
+        <p class="col-template-val">#=data.Phone#</p>
+        
+        <strong>Status</strong>
+        <p class="col-template-val customer-status">
+            <span class="stat-dot"></span> 
+            #=data.Status#
+        </p>
     </script>
 
 </body>

@@ -29,7 +29,7 @@ var Persons = [{
     "EMail": "Gerzson.Álea@somedomain.some",
     "Phone": "+000000001",
     "UserName": "e31b9baa6",
-    "Status": "Another Status"
+    "Status": "Closed"
 }, {
     "ID": 1688,
     "Organization": "Service Provider",
@@ -37,7 +37,7 @@ var Persons = [{
     "EMail": "Betsabé.Alba@somedomain.some",
     "Phone": "+000000001",
     "UserName": "c60bfacb9",
-    "Status": "Test Status"
+    "Status": "Closed"
 }, {
     "ID": 1709,
     "Organization": "Service Provider",
